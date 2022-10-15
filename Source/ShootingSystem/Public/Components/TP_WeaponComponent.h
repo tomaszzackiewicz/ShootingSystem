@@ -7,6 +7,7 @@
 #include "TP_WeaponComponent.generated.h"
 
 class AShootingSystemCharacter;
+class USkeletalMeshComponent;
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SHOOTINGSYSTEM_API UTP_WeaponComponent : public UActorComponent
@@ -83,11 +84,22 @@ private:
 
 	AShootingImpactEffect* ShootingImpactEffect = nullptr;
 
+	UPROPERTY()
+	const USkeletalMeshSocket* FireMeshSocket = { nullptr };
+
+	UPROPERTY()
+	const USkeletalMeshSocket* MuzzleMeshSocket = { nullptr };
+
+	UPROPERTY()
+	USkeletalMeshComponent* OwnerSkeletalMeshComponent { nullptr };
+
+	FTransform SocketTransform{ FVector::ZeroVector };
+
 	/** spawned component for muzzle FX */
 	UPROPERTY(Transient)
 	UParticleSystemComponent* MuzzlePSC;
 
-	void SetSocket();
+	void SetSockets();
 
 	void PlayShootFire();
 
@@ -113,4 +125,5 @@ private:
 
 	UFUNCTION()
 	void StopMuzzleFire();
+
 };

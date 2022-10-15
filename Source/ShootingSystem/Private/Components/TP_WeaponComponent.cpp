@@ -36,6 +36,7 @@ void UTP_WeaponComponent::BeginPlay()
 	{
 		ShootingImpactEffect = GetWorld()->SpawnActor<AShootingImpactEffect>(ImpactTemplate, FVector().ZeroVector, FRotator().ZeroRotator);
 	}
+	SetSockets();
 	
 }
 
@@ -60,12 +61,7 @@ void UTP_WeaponComponent::Fire()
 	ShootRaycast();
 }
 
-void UTP_WeaponComponent::SetSocket()
-{
-	
-}
-
-void UTP_WeaponComponent::PlayShootFire()
+void UTP_WeaponComponent::SetSockets()
 {
 	AGun* CurrentGun = Cast<AGun>(GetOwner());
 	if (!CurrentGun)
@@ -73,29 +69,31 @@ void UTP_WeaponComponent::PlayShootFire()
 		return;
 	}
 
-	USkeletalMeshComponent* SkeletalMeshComponent = CurrentGun->GetSkeletalMeshComponent();
+	OwnerSkeletalMeshComponent = CurrentGun->GetSkeletalMeshComponent();
 
-	if (!SkeletalMeshComponent)
+	if (!OwnerSkeletalMeshComponent)
 	{
 		return;
 	}
 
-	const USkeletalMeshSocket* Fire = SkeletalMeshComponent->GetSocketByName(FireSocket);
+	FireMeshSocket = OwnerSkeletalMeshComponent->GetSocketByName(FireSocket);
+	MuzzleMeshSocket = OwnerSkeletalMeshComponent->GetSocketByName(MuzzleSocket);
+}
 
-	if (!Fire)
+void UTP_WeaponComponent::PlayShootFire()
+{
+
+	if (!FireMeshSocket)
 	{
 		return;
 	}
 
-	const FTransform SocketTransform = Fire->GetSocketTransform(SkeletalMeshComponent);
+	SocketTransform = FireMeshSocket->GetSocketTransform(OwnerSkeletalMeshComponent);
 
 	if (MuzzleFireParticles)
 	{
-		//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFireParticles, SocketTransform);
 
-		MuzzlePSC = UGameplayStatics::SpawnEmitterAttached(MuzzleFireParticles, SkeletalMeshComponent, FireSocket);
-		//MuzzlePSC->bOwnerNoSee = false;
-		//MuzzlePSC->bOnlyOwnerSee = true;
+		MuzzlePSC = UGameplayStatics::SpawnEmitterAttached(MuzzleFireParticles, OwnerSkeletalMeshComponent, FireSocket);
 
 		GetWorld()->GetTimerManager().SetTimer(StopMuzzleFirerHandle, this, &UTP_WeaponComponent::StopMuzzleFire, 0.1f, false);
 		
@@ -129,68 +127,38 @@ void UTP_WeaponComponent::ShootRaycast()
 	UWorld* const World = GetWorld();
 	if (World != nullptr)
 	{
-		//Collect all USkeletalMeshComponents in actor
-		const TArray<UActorComponent*> SkeletalMeshComponents = GetOwner()->GetComponentsByClass(USkeletalMeshComponent::StaticClass());
 
-		if (SkeletalMeshComponents.Num() <= 0)
+		const FTransform MuzzleSocketTransform = MuzzleMeshSocket->GetSocketTransform(OwnerSkeletalMeshComponent);
+
+		const FVector Start{ MuzzleSocketTransform.GetLocation() };
+		const FQuat Rotation{ MuzzleSocketTransform.GetRotation() };
+		const FVector RotationAxis{ Rotation.GetAxisX() };
+		const FVector End{ Start + RotationAxis * ShootRange };
+
+		FCollisionResponseParams ResponseParams;
+		FCollisionQueryParams QueryParams = FCollisionQueryParams::DefaultQueryParam;
+		FActorSpawnParameters SpawnParams;
+		QueryParams.bReturnPhysicalMaterial = true;
+		QueryParams.bTraceComplex = true;
+		QueryParams.AddIgnoredActor(GetOwner());
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+		TArray<FHitResult> FireHits;
+		const bool Hit = World->LineTraceMultiByChannel(FireHits, Start, End, ECC_Shoot, QueryParams, ResponseParams);
+		FVector BeamEndPoint{ End };
+
+		//DEBUG
+		//DrawDebugLine(World, Start, End, FColor::Red, false, 2.0f);
+
+		if (!Hit)
 		{
+
+			SetTrail(BeamEndPoint, SocketTransform.GetLocation());
+
 			return;
 		}
 
-		USkeletalMeshComponent* SkeletalMeshComponent = nullptr;
-
-		//We asssume there can be many USkeletalMeshComponents in the future, so it is better to find the one we need
-		for (auto SkeletalMeshComponentToCheck : SkeletalMeshComponents)
-		{
-			if (SkeletalMeshComponentToCheck->ComponentHasTag(Gun))
-			{
-				SkeletalMeshComponent = Cast<USkeletalMeshComponent>(SkeletalMeshComponentToCheck);
-				break;
-			}
-		}
-
-		if (SkeletalMeshComponent)
-		{
-
-			const USkeletalMeshSocket* Muzzle = SkeletalMeshComponent->GetSocketByName(MuzzleSocket);
-
-			if (Muzzle)
-			{
-
-				const FTransform SocketTransform = Muzzle->GetSocketTransform(SkeletalMeshComponent);
-
-				const FVector Start{ SocketTransform.GetLocation() };
-				const FQuat Rotation{ SocketTransform.GetRotation() };
-				const FVector RotationAxis{ Rotation.GetAxisX() };
-				const FVector End{ Start + RotationAxis * ShootRange };
-
-				FCollisionResponseParams ResponseParams;
-				FCollisionQueryParams QueryParams = FCollisionQueryParams::DefaultQueryParam;
-				FActorSpawnParameters SpawnParams;
-				QueryParams.bReturnPhysicalMaterial = true;
-				QueryParams.bTraceComplex = true;
-				QueryParams.AddIgnoredActor(GetOwner());
-				SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-				TArray<FHitResult> FireHits;
-				const bool Hit = World->LineTraceMultiByChannel(FireHits, Start, End, ECC_Shoot, QueryParams, ResponseParams);
-				FVector BeamEndPoint{ End };
-
-				//DEBUG
-				//DrawDebugLine(World, Start, End, FColor::Red, false, 2.0f);
-				
-				if (!Hit)
-				{
-
-					SetTrail(BeamEndPoint, SocketTransform.GetLocation());
-
-					return;
-				}
-
-				HandleHitResult(World, FireHits, RotationAxis, SocketTransform.GetLocation());
-
-			}
-		}
+		HandleHitResult(World, FireHits, RotationAxis, SocketTransform.GetLocation());
 	}
 }
 
