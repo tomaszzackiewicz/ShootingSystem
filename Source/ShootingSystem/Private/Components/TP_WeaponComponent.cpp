@@ -18,6 +18,7 @@
 #include "Animation/AnimInstance.h"
 #include "Other/ShooterPhysicalMaterial.h"
 #include "Shared/GlobalDefines.h"
+#include "Other/Gun.h"
 
 // Sets default values for this component's properties
 UTP_WeaponComponent::UTP_WeaponComponent()
@@ -46,6 +47,9 @@ void UTP_WeaponComponent::Fire()
 		return;
 	}
 
+	// Try and play the muzzle fire FX if specified
+	PlayShootFire();
+
 	// Try and play the sound if specified
 	PlayShootSound();
 
@@ -56,9 +60,50 @@ void UTP_WeaponComponent::Fire()
 	ShootRaycast();
 }
 
+void UTP_WeaponComponent::SetSocket()
+{
+	
+}
+
+void UTP_WeaponComponent::PlayShootFire()
+{
+	AGun* CurrentGun = Cast<AGun>(GetOwner());
+	if (!CurrentGun)
+	{
+		return;
+	}
+
+	USkeletalMeshComponent* SkeletalMeshComponent = CurrentGun->GetSkeletalMeshComponent();
+
+	if (!SkeletalMeshComponent)
+	{
+		return;
+	}
+
+	const USkeletalMeshSocket* Fire = SkeletalMeshComponent->GetSocketByName(FireSocket);
+
+	if (!Fire)
+	{
+		return;
+	}
+
+	const FTransform SocketTransform = Fire->GetSocketTransform(SkeletalMeshComponent);
+
+	if (MuzzleFireParticles)
+	{
+		//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFireParticles, SocketTransform);
+
+		MuzzlePSC = UGameplayStatics::SpawnEmitterAttached(MuzzleFireParticles, SkeletalMeshComponent, FireSocket);
+		//MuzzlePSC->bOwnerNoSee = false;
+		//MuzzlePSC->bOnlyOwnerSee = true;
+
+		GetWorld()->GetTimerManager().SetTimer(StopMuzzleFirerHandle, this, &UTP_WeaponComponent::StopMuzzleFire, 0.1f, false);
+		
+	}
+}
+
 void UTP_WeaponComponent::PlayShootSound()
 {
-
 	if (FireSound != nullptr)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, FireSound, Character->GetActorLocation());
@@ -67,7 +112,6 @@ void UTP_WeaponComponent::PlayShootSound()
 
 void UTP_WeaponComponent::PlayShootAnim()
 {
-
 	if (FireAnimation != nullptr)
 	{
 		// Get the animation object for the arms mesh
@@ -108,12 +152,12 @@ void UTP_WeaponComponent::ShootRaycast()
 		if (SkeletalMeshComponent)
 		{
 
-			const USkeletalMeshSocket* MuzzleSocket = SkeletalMeshComponent->GetSocketByName(Muzzle);
+			const USkeletalMeshSocket* Muzzle = SkeletalMeshComponent->GetSocketByName(MuzzleSocket);
 
-			if (MuzzleSocket)
+			if (Muzzle)
 			{
 
-				const FTransform SocketTransform = MuzzleSocket->GetSocketTransform(SkeletalMeshComponent);
+				const FTransform SocketTransform = Muzzle->GetSocketTransform(SkeletalMeshComponent);
 
 				const FVector Start{ SocketTransform.GetLocation() };
 				const FQuat Rotation{ SocketTransform.GetRotation() };
@@ -286,6 +330,11 @@ bool UTP_WeaponComponent::AddImpulseToPhysicalActors(FHitResult& HitResultParam,
 	}
 	
 	return bIsActorDynamic;
+}
+
+void UTP_WeaponComponent::StopMuzzleFire()
+{
+	MuzzlePSC->DeactivateSystem();
 }
 
 void UTP_WeaponComponent::AttachWeapon(AShootingSystemCharacter* TargetCharacter)

@@ -68,6 +68,10 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay", meta = (AllowPrivateAccess = "true"))
 	UParticleSystem* TrailParticles = nullptr;
 
+	/** Muzzle fire FX for shooting */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay", meta = (AllowPrivateAccess = "true"))
+	UParticleSystem* MuzzleFireParticles = nullptr;
+
 	/** Impact effects, sounds, and decals */
 	UPROPERTY(EditDefaultsOnly, Category = "Gameplay", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AShootingImpactEffect> ImpactTemplate = NULL;
@@ -78,6 +82,14 @@ private:
 	int32 SkeletalMeshComponentsIndex{ 0 };
 
 	AShootingImpactEffect* ShootingImpactEffect = nullptr;
+
+	/** spawned component for muzzle FX */
+	UPROPERTY(Transient)
+	UParticleSystemComponent* MuzzlePSC;
+
+	void SetSocket();
+
+	void PlayShootFire();
 
 	void PlayShootSound();
 	
@@ -96,4 +108,9 @@ private:
 	void DealDamageToCharacter(FHitResult& HitResultParam);
 	
 	bool AddImpulseToPhysicalActors(FHitResult& HitResultParam, const FVector RotationAxisParam);
+
+	FTimerHandle StopMuzzleFirerHandle;
+
+	UFUNCTION()
+	void StopMuzzleFire();
 };
