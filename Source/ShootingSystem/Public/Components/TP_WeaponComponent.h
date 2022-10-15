@@ -18,9 +18,6 @@ public:
 	/** Sets default values for this component's properties */
 	UTP_WeaponComponent();
 
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
 	/** Attaches the actor to a FirstPersonCharacter */
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void AttachWeapon(AShootingSystemCharacter* TargetCharacter);
@@ -83,12 +80,20 @@ private:
 	AShootingImpactEffect* ShootingImpactEffect = nullptr;
 
 	void PlayShootSound();
+	
 	void PlayShootAnim();
+	
 	void ShootRaycast();
+	
 	void HandleHitResult(UWorld* WorldParam, TArray<FHitResult> HitResultsParam, const FVector RotationAxisParam, const FVector StartTrailParam);
+	
 	void SetTrailForGun(FHitResult& HitResultParam, const FVector SocketTransformParam);
+	
 	void SetTrail(FVector BeamEndPointParam, FVector SocketTransformParam);
+	
 	void SpawnImpactTemplate(UWorld* WorldParam, FHitResult& HitResultParam, bool bIsActorDynamicParam);
+	
 	void DealDamageToCharacter(FHitResult& HitResultParam);
+	
 	bool AddImpulseToPhysicalActors(FHitResult& HitResultParam, const FVector RotationAxisParam);
 };

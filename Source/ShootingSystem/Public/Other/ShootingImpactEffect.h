@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-//#include "Pool/PooledObject.h"
 #include "ShootingImpactEffect.generated.h"
 
 class UMaterialInterface;
@@ -30,8 +29,6 @@ public:
 	USoundCue* GetImpactSound(TEnumAsByte<EPhysicalSurface> SurfaceType) const;
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
 	/** default impact FX used when material specific override doesn't exist */
 	UPROPERTY(EditDefaultsOnly, Category = Defaults)

@@ -17,6 +17,7 @@
 #include "Shared/StaticGlobalProperties.h"
 #include "Animation/AnimInstance.h"
 #include "Other/ShooterPhysicalMaterial.h"
+#include "Shared/GlobalDefines.h"
 
 // Sets default values for this component's properties
 UTP_WeaponComponent::UTP_WeaponComponent()
@@ -35,14 +36,6 @@ void UTP_WeaponComponent::BeginPlay()
 		ShootingImpactEffect = GetWorld()->SpawnActor<AShootingImpactEffect>(ImpactTemplate, FVector().ZeroVector, FRotator().ZeroRotator);
 	}
 	
-}
-
-// Called every frame
-void UTP_WeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
 void UTP_WeaponComponent::Fire()
@@ -136,7 +129,7 @@ void UTP_WeaponComponent::ShootRaycast()
 				SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 				TArray<FHitResult> FireHits;
-				const bool Hit = World->LineTraceMultiByChannel(FireHits, Start, End, ECollisionChannel::ECC_GameTraceChannel2, QueryParams, ResponseParams);
+				const bool Hit = World->LineTraceMultiByChannel(FireHits, Start, End, ECC_Shoot, QueryParams, ResponseParams);
 				FVector BeamEndPoint{ End };
 
 				//DEBUG

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Other/ShootingImpactEffect.h"
-#include "GameMode/ShootingSystemGameMode.h"
+#include "Shared/GlobalDefines.h"
 
 // Sets default values
 AShootingImpactEffect::AShootingImpactEffect()
@@ -9,13 +9,6 @@ AShootingImpactEffect::AShootingImpactEffect()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-}
-
-// Called when the game starts or when spawned
-void AShootingImpactEffect::BeginPlay()
-{
-	Super::BeginPlay();
-	
 }
 
 UParticleSystem* AShootingImpactEffect::GetImpactFX(TEnumAsByte<EPhysicalSurface> SurfaceType) const
