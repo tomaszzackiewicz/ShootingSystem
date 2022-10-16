@@ -22,7 +22,7 @@ UTP_WeaponComponent::UTP_WeaponComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	// Default offset from the character location for projectiles to spawn
-	MuzzleOffset = FVector(100.0f, 0.0f, 10.0f);
+	
 }
 
 void UTP_WeaponComponent::BeginPlay()
@@ -33,8 +33,35 @@ void UTP_WeaponComponent::BeginPlay()
 	{
 		ShootingImpactEffect = GetWorld()->SpawnActor<AShootingImpactEffect>(ImpactTemplate, FVector().ZeroVector, FRotator().ZeroRotator);
 	}
+
+	OwnerActor = GetOwner();
+
 	SetSockets();
 	
+}
+
+void UTP_WeaponComponent::SetSockets()
+{
+
+	if (!OwnerActor) {
+		return;
+	}
+
+	AGun* CurrentGun = Cast<AGun>(OwnerActor);
+	if (!CurrentGun)
+	{
+		return;
+	}
+
+	OwnerSkeletalMeshComponent = CurrentGun->GetSkeletalMeshComponent();
+
+	if (!OwnerSkeletalMeshComponent)
+	{
+		return;
+	}
+
+	FireMeshSocket = OwnerSkeletalMeshComponent->GetSocketByName(FireSocket);
+	MuzzleMeshSocket = OwnerSkeletalMeshComponent->GetSocketByName(MuzzleSocket);
 }
 
 void UTP_WeaponComponent::Fire()
@@ -56,25 +83,6 @@ void UTP_WeaponComponent::Fire()
 
 	//Raycast with each shoot
 	ShootRaycast();
-}
-
-void UTP_WeaponComponent::SetSockets()
-{
-	AGun* CurrentGun = Cast<AGun>(GetOwner());
-	if (!CurrentGun)
-	{
-		return;
-	}
-
-	OwnerSkeletalMeshComponent = CurrentGun->GetSkeletalMeshComponent();
-
-	if (!OwnerSkeletalMeshComponent)
-	{
-		return;
-	}
-
-	FireMeshSocket = OwnerSkeletalMeshComponent->GetSocketByName(FireSocket);
-	MuzzleMeshSocket = OwnerSkeletalMeshComponent->GetSocketByName(MuzzleSocket);
 }
 
 void UTP_WeaponComponent::PlayShootFire()
@@ -122,9 +130,13 @@ void UTP_WeaponComponent::ShootRaycast()
 {
 
 	UWorld* const World = GetWorld();
-	if (World != nullptr)
+	if (World)
 	{
 		if (!MuzzleMeshSocket) {
+			return;
+		}
+
+		if (!OwnerActor) {
 			return;
 		}
 
@@ -136,12 +148,15 @@ void UTP_WeaponComponent::ShootRaycast()
 		const FVector End{ Start + RotationAxis * ShootRange };
 
 		FCollisionResponseParams ResponseParams;
-		FCollisionQueryParams QueryParams = FCollisionQueryParams::DefaultQueryParam;
+		
 		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+		FCollisionQueryParams QueryParams = FCollisionQueryParams::DefaultQueryParam;
 		QueryParams.bReturnPhysicalMaterial = true;
 		QueryParams.bTraceComplex = true;
-		QueryParams.AddIgnoredActor(GetOwner());
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		QueryParams.AddIgnoredActor(OwnerActor);
+		
 
 		TArray<FHitResult> FireHits;
 		const bool Hit = World->LineTraceMultiByChannel(FireHits, Start, End, ECC_Shoot, QueryParams, ResponseParams);
@@ -309,11 +324,16 @@ void UTP_WeaponComponent::StopMuzzleFire()
 void UTP_WeaponComponent::AttachWeapon(AShootingSystemCharacter* TargetCharacter)
 {
 	Character = TargetCharacter;
-	if (Character != nullptr)
+	if (Character)
 	{
 		// Attach the weapon to the First Person Character
 		FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
-		GetOwner()->AttachToComponent(Character->GetMesh1P(), AttachmentRules, GripPoint);
+
+		if (!OwnerActor) {
+			return;
+		};
+
+		OwnerActor->AttachToComponent(Character->GetMesh1P(), AttachmentRules, GripPoint);
 
 		// Register so that Fire is called every time the character tries to use the item being held
 		Character->OnUseItem.AddDynamic(this, &UTP_WeaponComponent::Fire);
@@ -330,5 +350,9 @@ void UTP_WeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		Character->OnUseItem.RemoveDynamic(this, &UTP_WeaponComponent::Fire);
 	}
 
-	GetWorld()->GetTimerManager().ClearTimer(StopMuzzleFirerHandle);
+	UWorld* const World = GetWorld();
+
+	if (World) {
+		World->GetTimerManager().ClearTimer(StopMuzzleFirerHandle);
+	}
 }

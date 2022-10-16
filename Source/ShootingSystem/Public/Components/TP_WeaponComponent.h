@@ -39,7 +39,7 @@ private:
 
 	/** Gun muzzle's offset from the characters location */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay", meta = (AllowPrivateAccess = "true"))
-	FVector MuzzleOffset = FVector(100.0f, 0.0f, 0.0f);
+	FVector MuzzleOffset = FVector(100.0f, 0.0f, 10.0f);
 
 	/** Size of impact decal on material */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay", meta = (AllowPrivateAccess = "true"))
@@ -92,6 +92,9 @@ private:
 
 	UPROPERTY()
 	USkeletalMeshComponent* OwnerSkeletalMeshComponent = nullptr;
+
+	UPROPERTY()
+	AActor*  OwnerActor = nullptr;
 
 	FTransform SocketTransform{ FVector::ZeroVector };
 
