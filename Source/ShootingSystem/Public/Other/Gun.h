@@ -27,12 +27,12 @@ protected:
 	UFUNCTION()
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+public:
 
 	FORCEINLINE UTP_PickUpComponent* GetTP_PickUpComponent() const { return TP_PickUpComponent; }
+
 	FORCEINLINE USkeletalMeshComponent* GetSkeletalMeshComponent() const { return SkeletalMeshComponent; }
+
 	FORCEINLINE UTP_WeaponComponent* GetTP_WeaponComponent() const { return TP_WeaponComponent; }
 
 private:

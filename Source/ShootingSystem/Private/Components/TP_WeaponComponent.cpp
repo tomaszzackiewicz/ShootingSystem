@@ -19,6 +19,7 @@
 #include "Other/ShooterPhysicalMaterial.h"
 #include "Shared/GlobalDefines.h"
 #include "Other/Gun.h"
+#include "GameFramework/Actor.h"
 
 // Sets default values for this component's properties
 UTP_WeaponComponent::UTP_WeaponComponent()
@@ -90,7 +91,7 @@ void UTP_WeaponComponent::PlayShootFire()
 
 	SocketTransform = FireMeshSocket->GetSocketTransform(OwnerSkeletalMeshComponent);
 
-	if (MuzzleFireParticles)
+	if (MuzzleFireParticles && MuzzlePSC)
 	{
 
 		MuzzlePSC = UGameplayStatics::SpawnEmitterAttached(MuzzleFireParticles, OwnerSkeletalMeshComponent, FireSocket);
@@ -304,7 +305,9 @@ bool UTP_WeaponComponent::AddImpulseToPhysicalActors(FHitResult& HitResultParam,
 
 void UTP_WeaponComponent::StopMuzzleFire()
 {
-	MuzzlePSC->DeactivateSystem();
+	if (MuzzlePSC) {
+		MuzzlePSC->DeactivateSystem();
+	}
 }
 
 void UTP_WeaponComponent::AttachWeapon(AShootingSystemCharacter* TargetCharacter)
@@ -330,4 +333,6 @@ void UTP_WeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		// Unregister from the OnUseItem Event
 		Character->OnUseItem.RemoveDynamic(this, &UTP_WeaponComponent::Fire);
 	}
+
+	GetWorld()->GetTimerManager().ClearTimer(StopMuzzleFirerHandle);
 }
