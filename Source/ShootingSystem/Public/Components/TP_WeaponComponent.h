@@ -109,17 +109,17 @@ private:
 	
 	void ShootRaycast();
 	
-	void HandleHitResult(UWorld* WorldParam, TArray<FHitResult> HitResultsParam, const FVector RotationAxisParam, const FVector StartTrailParam);
+	void HandleHitResult(UWorld* WorldParam, TArray<FHitResult>& HitResultsParam, const FVector& RotationAxisParam, const FVector& StartTrailParam);
 	
-	void SetTrailWhileHit(FHitResult& HitResultParam, const FVector SocketTransformParam);
+	void SetTrailWhileHit(FHitResult& HitResultParam, const FVector& SocketTransformParam);
 	
-	void SetTrail(FVector BeamEndPointParam, FVector SocketTransformParam);
+	void SetTrail(const FVector& BeamEndPointParam, const FVector& SocketTransformParam);
 	
 	void SpawnImpactTemplate(UWorld* WorldParam, FHitResult& HitResultParam, bool bIsActorDynamicParam);
 	
 	void DealDamageToCharacter(FHitResult& HitResultParam);
 	
-	bool AddImpulseToPhysicalActors(FHitResult& HitResultParam, const FVector RotationAxisParam);
+	bool AddImpulseToPhysicalActors(FHitResult& HitResultParam, const FVector& RotationAxisParam);
 
 	FTimerHandle StopMuzzleFirerHandle;
 

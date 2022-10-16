@@ -3,12 +3,9 @@
 
 #include "Components/TP_WeaponComponent.h"
 #include "GameMode/ShootingSystemCharacter.h"
-#include "GameFramework/PlayerController.h"
-#include "Camera/PlayerCameraManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
 #include "Engine/SkeletalMeshSocket.h"
-#include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Other/ShootingImpactEffect.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
@@ -19,7 +16,6 @@
 #include "Other/ShooterPhysicalMaterial.h"
 #include "Shared/GlobalDefines.h"
 #include "Other/Gun.h"
-#include "GameFramework/Actor.h"
 
 // Sets default values for this component's properties
 UTP_WeaponComponent::UTP_WeaponComponent()
@@ -166,7 +162,7 @@ void UTP_WeaponComponent::ShootRaycast()
 	}
 }
 
-void UTP_WeaponComponent::HandleHitResult(UWorld* WorldParam, TArray<FHitResult> HitResultsParam, const FVector RotationAxisParam, const FVector StartTrailParam)
+void UTP_WeaponComponent::HandleHitResult(UWorld* WorldParam, TArray<FHitResult>& HitResultsParam, const FVector& RotationAxisParam, const FVector& StartTrailParam)
 {
 
 	for (FHitResult& Result : HitResultsParam)
@@ -188,7 +184,7 @@ void UTP_WeaponComponent::HandleHitResult(UWorld* WorldParam, TArray<FHitResult>
 	}
 }
 
-void UTP_WeaponComponent::SetTrailWhileHit(FHitResult& HitResultParam, const FVector SocketTransformParam)
+void UTP_WeaponComponent::SetTrailWhileHit(FHitResult& HitResultParam, const FVector& SocketTransformParam)
 {
 
 	FVector BeamEndPoint = HitResultParam.Location;
@@ -197,7 +193,7 @@ void UTP_WeaponComponent::SetTrailWhileHit(FHitResult& HitResultParam, const FVe
 
 }
 
-void UTP_WeaponComponent::SetTrail(FVector BeamEndPointParam, const FVector SocketTransformParam)
+void UTP_WeaponComponent::SetTrail(const FVector& BeamEndPointParam, const FVector& SocketTransformParam)
 {
 	if (TrailParticles)
 	{
@@ -275,7 +271,7 @@ void UTP_WeaponComponent::DealDamageToCharacter(FHitResult& HitResultParam)
 	}
 }
 
-bool UTP_WeaponComponent::AddImpulseToPhysicalActors(FHitResult& HitResultParam, const FVector RotationAxisParam)
+bool UTP_WeaponComponent::AddImpulseToPhysicalActors(FHitResult& HitResultParam, const FVector& RotationAxisParam)
 {
 	bool bIsActorDynamic = false;
 

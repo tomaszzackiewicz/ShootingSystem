@@ -17,17 +17,39 @@ UParticleSystem* AShootingImpactEffect::GetImpactFX(TEnumAsByte<EPhysicalSurface
 
 	switch (SurfaceType)
 	{
-	case SHOOTER_SURFACE_Concrete:	ImpactFX = ConcreteFX; break;
-	case SHOOTER_SURFACE_Dirt:		ImpactFX = DirtFX; break;
-	case SHOOTER_SURFACE_Water:		ImpactFX = WaterFX; break;
-	case SHOOTER_SURFACE_Metal:		ImpactFX = MetalFX; break;
-	case SHOOTER_SURFACE_Wood:		ImpactFX = WoodFX; break;
-	case SHOOTER_SURFACE_Grass:		ImpactFX = GrassFX; break;
-	case SHOOTER_SURFACE_Glass:		ImpactFX = GlassFX; break;
-	case SHOOTER_SURFACE_Flesh:		ImpactFX = FleshFX; break;
-	case SHOOTER_SURFACE_Tile:		ImpactFX = TileFX; break;
-	case SHOOTER_SURFACE_Empty:		ImpactFX = EmptyFX; break;
-	default:						ImpactFX = DefaultFX; break;
+	case SHOOTER_SURFACE_Concrete:	
+		ImpactFX = ConcreteFX; 
+		break;
+	case SHOOTER_SURFACE_Dirt:		
+		ImpactFX = DirtFX; 
+		break;
+	case SHOOTER_SURFACE_Water:		
+		ImpactFX = WaterFX; 
+		break;
+	case SHOOTER_SURFACE_Metal:		
+		ImpactFX = MetalFX; 
+		break;
+	case SHOOTER_SURFACE_Wood:		
+		ImpactFX = WoodFX; 
+		break;
+	case SHOOTER_SURFACE_Grass:		
+		ImpactFX = GrassFX; 
+		break;
+	case SHOOTER_SURFACE_Glass:		
+		ImpactFX = GlassFX; 
+		break;
+	case SHOOTER_SURFACE_Flesh:		
+		ImpactFX = FleshFX; 
+		break;
+	case SHOOTER_SURFACE_Tile:		
+		ImpactFX = TileFX; 
+		break;
+	case SHOOTER_SURFACE_Empty:		
+		ImpactFX = EmptyFX; 
+		break;
+	default:						
+		ImpactFX = DefaultFX; 
+		break;
 	}
 
 	return ImpactFX;
@@ -39,17 +61,39 @@ UMaterialInterface* AShootingImpactEffect::GetImpactDecal(TEnumAsByte<EPhysicalS
 
 	switch (SurfaceType)
 	{
-	case SHOOTER_SURFACE_Concrete:	ImpactDecal = ConcreteDecal; break;
-	case SHOOTER_SURFACE_Dirt:		ImpactDecal = DirtDecal; break;
-	case SHOOTER_SURFACE_Water:		ImpactDecal = WaterDecal; break;
-	case SHOOTER_SURFACE_Metal:		ImpactDecal = MetalDecal; break;
-	case SHOOTER_SURFACE_Wood:		ImpactDecal = WoodDecal; break;
-	case SHOOTER_SURFACE_Grass:		ImpactDecal = GrassDecal; break;
-	case SHOOTER_SURFACE_Glass:		ImpactDecal = GlassDecal; break;
-	case SHOOTER_SURFACE_Flesh:		ImpactDecal = FleshDecal; break;
-	case SHOOTER_SURFACE_Tile:		ImpactDecal = TileDecal; break;
-	case SHOOTER_SURFACE_Empty:		ImpactDecal = EmptyDecal; break;
-	default:						ImpactDecal = DefaultDecal; break;
+	case SHOOTER_SURFACE_Concrete:	
+		ImpactDecal = ConcreteDecal; 
+		break;
+	case SHOOTER_SURFACE_Dirt:		
+		ImpactDecal = DirtDecal; 
+		break;
+	case SHOOTER_SURFACE_Water:		
+		ImpactDecal = WaterDecal; 
+		break;
+	case SHOOTER_SURFACE_Metal:		
+		ImpactDecal = MetalDecal; 
+		break;
+	case SHOOTER_SURFACE_Wood:		
+		ImpactDecal = WoodDecal; 
+		break;
+	case SHOOTER_SURFACE_Grass:		
+		ImpactDecal = GrassDecal; 
+		break;
+	case SHOOTER_SURFACE_Glass:		
+		ImpactDecal = GlassDecal; 
+		break;
+	case SHOOTER_SURFACE_Flesh:		
+		ImpactDecal = FleshDecal; 
+		break;
+	case SHOOTER_SURFACE_Tile:		
+		ImpactDecal = TileDecal; 
+		break;
+	case SHOOTER_SURFACE_Empty:		
+		ImpactDecal = EmptyDecal; 
+		break;
+	default:						
+		ImpactDecal = DefaultDecal; 
+		break;
 	}
 
 	return ImpactDecal;
@@ -61,17 +105,39 @@ USoundCue* AShootingImpactEffect::GetImpactSound(TEnumAsByte<EPhysicalSurface> S
 
 	switch (SurfaceType)
 	{
-	case SHOOTER_SURFACE_Concrete:	ImpactSound = ConcreteSound; break;
-	case SHOOTER_SURFACE_Dirt:		ImpactSound = DirtSound; break;
-	case SHOOTER_SURFACE_Water:		ImpactSound = WaterSound; break;
-	case SHOOTER_SURFACE_Metal:		ImpactSound = MetalSound; break;
-	case SHOOTER_SURFACE_Wood:		ImpactSound = WoodSound; break;
-	case SHOOTER_SURFACE_Grass:		ImpactSound = GrassSound; break;
-	case SHOOTER_SURFACE_Glass:		ImpactSound = GlassSound; break;
-	case SHOOTER_SURFACE_Flesh:		ImpactSound = FleshSound; break;
-	case SHOOTER_SURFACE_Tile:		ImpactSound = TileSound; break;
-	case SHOOTER_SURFACE_Empty:		ImpactSound = EmptySound; break;
-	default:						ImpactSound = DefaultSound; break;
+	case SHOOTER_SURFACE_Concrete:	
+		ImpactSound = ConcreteSound; 
+		break;
+	case SHOOTER_SURFACE_Dirt:		
+		ImpactSound = DirtSound; 
+		break;
+	case SHOOTER_SURFACE_Water:		
+		ImpactSound = WaterSound; 
+		break;
+	case SHOOTER_SURFACE_Metal:		
+		ImpactSound = MetalSound; 
+		break;
+	case SHOOTER_SURFACE_Wood:		
+		ImpactSound = WoodSound; 
+		break;
+	case SHOOTER_SURFACE_Grass:		
+		ImpactSound = GrassSound; 
+		break;
+	case SHOOTER_SURFACE_Glass:		
+		ImpactSound = GlassSound; 
+		break;
+	case SHOOTER_SURFACE_Flesh:		
+		ImpactSound = FleshSound; 
+		break;
+	case SHOOTER_SURFACE_Tile:		
+		ImpactSound = TileSound; 
+		break;
+	case SHOOTER_SURFACE_Empty:		
+		ImpactSound = EmptySound; 
+		break;
+	default:						
+		ImpactSound = DefaultSound;
+		break;
 	}
 
 	return ImpactSound;
