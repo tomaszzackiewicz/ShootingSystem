@@ -6,7 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/InputSettings.h"
-
+#include "Kismet/KismetSystemLibrary.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AShootingSystemCharacter
@@ -53,6 +53,7 @@ void AShootingSystemCharacter::SetupPlayerInputComponent(class UInputComponent* 
 	// Bind jump events
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	PlayerInputComponent->BindAction("Quit", IE_Pressed, this, &AShootingSystemCharacter::OnQuit);
 
 	// Bind fire event
 	PlayerInputComponent->BindAction("PrimaryAction", IE_Pressed, this, &AShootingSystemCharacter::OnPrimaryAction);
@@ -68,6 +69,11 @@ void AShootingSystemCharacter::SetupPlayerInputComponent(class UInputComponent* 
 	PlayerInputComponent->BindAxis("Look Up / Down Mouse", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("Turn Right / Left Gamepad", this, &AShootingSystemCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("Look Up / Down Gamepad", this, &AShootingSystemCharacter::LookUpAtRate);
+}
+
+void AShootingSystemCharacter::OnQuit()
+{
+	UKismetSystemLibrary::QuitGame(this, nullptr, EQuitPreference::Quit, false);
 }
 
 void AShootingSystemCharacter::OnPrimaryAction()

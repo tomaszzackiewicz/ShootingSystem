@@ -79,5 +79,8 @@ public:
 	/** Returns FirstPersonCameraComponent subobject **/
 	FORCEINLINE UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+private:
+	void OnQuit();
+
 };
 
