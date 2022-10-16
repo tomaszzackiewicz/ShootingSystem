@@ -29,6 +29,7 @@ void UTP_WeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//The things we possibly need often in the code can exist more globally not to get them all the time, especially when we shooting
 	if (ImpactTemplate)
 	{
 		ShootingImpactEffect = GetWorld()->SpawnActor<AShootingImpactEffect>(ImpactTemplate, FVector().ZeroVector, FRotator().ZeroRotator);
