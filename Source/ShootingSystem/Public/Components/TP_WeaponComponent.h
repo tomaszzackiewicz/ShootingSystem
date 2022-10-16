@@ -39,23 +39,23 @@ private:
 
 	/** Gun muzzle's offset from the characters location */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay", meta = (AllowPrivateAccess = "true"))
-	FVector MuzzleOffset {100.0f, 0.0f, 0.0f };
+	FVector MuzzleOffset = FVector(100.0f, 0.0f, 0.0f);
 
 	/** Size of impact decal on material */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay", meta = (AllowPrivateAccess = "true"))
-	FVector DecalSize { 10.0f, 10.0f, 10.0f };
+	FVector DecalSize = FVector(10.0f, 10.0f, 10.0f);
 
 	/** Range of shoot raycast */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay", meta = (AllowPrivateAccess = "true"))
-	float ShootRange { 50000.0f };
+	float ShootRange = 50000.0f;
 
 	/** Amount of shoot damage */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay", meta = (AllowPrivateAccess = "true"))
-	int32 Damage { 10} ;
+	int32 Damage = 10;
 
 	/** Strength of impulse for physics actors */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay", meta = (AllowPrivateAccess = "true"))
-	float ImpulseStrength { 1000.0f };
+	float ImpulseStrength = 1000.0f;
 
 	/** Sound to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay", meta = (AllowPrivateAccess = "true"))
@@ -80,24 +80,24 @@ private:
 	/** The Character holding this weapon*/
 	AShootingSystemCharacter* Character = nullptr;
 
-	int32 SkeletalMeshComponentsIndex{ 0 };
+	int32 SkeletalMeshComponentsIndex = 0;
 
 	AShootingImpactEffect* ShootingImpactEffect = nullptr;
 
 	UPROPERTY()
-	const USkeletalMeshSocket* FireMeshSocket = { nullptr };
+	const USkeletalMeshSocket* FireMeshSocket = nullptr;
 
 	UPROPERTY()
-	const USkeletalMeshSocket* MuzzleMeshSocket = { nullptr };
+	const USkeletalMeshSocket* MuzzleMeshSocket = nullptr;
 
 	UPROPERTY()
-	USkeletalMeshComponent* OwnerSkeletalMeshComponent { nullptr };
+	USkeletalMeshComponent* OwnerSkeletalMeshComponent = nullptr;
 
 	FTransform SocketTransform{ FVector::ZeroVector };
 
 	/** spawned component for muzzle FX */
 	UPROPERTY(Transient)
-	UParticleSystemComponent* MuzzlePSC;
+	UParticleSystemComponent* MuzzlePSC = nullptr;
 
 	void SetSockets();
 
@@ -111,7 +111,7 @@ private:
 	
 	void HandleHitResult(UWorld* WorldParam, TArray<FHitResult> HitResultsParam, const FVector RotationAxisParam, const FVector StartTrailParam);
 	
-	void SetTrailForGun(FHitResult& HitResultParam, const FVector SocketTransformParam);
+	void SetTrailWhileHit(FHitResult& HitResultParam, const FVector SocketTransformParam);
 	
 	void SetTrail(FVector BeamEndPointParam, FVector SocketTransformParam);
 	

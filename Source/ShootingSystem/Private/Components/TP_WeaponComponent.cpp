@@ -25,7 +25,7 @@ UTP_WeaponComponent::UTP_WeaponComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	// Default offset from the character location for projectiles to spawn
-	MuzzleOffset = FVector { 100.0f, 0.0f, 10.0f };
+	MuzzleOffset = FVector(100.0f, 0.0f, 10.0f);
 }
 
 void UTP_WeaponComponent::BeginPlay()
@@ -127,6 +127,9 @@ void UTP_WeaponComponent::ShootRaycast()
 	UWorld* const World = GetWorld();
 	if (World != nullptr)
 	{
+		if (!MuzzleMeshSocket) {
+			return;
+		}
 
 		const FTransform MuzzleSocketTransform = MuzzleMeshSocket->GetSocketTransform(OwnerSkeletalMeshComponent);
 
@@ -170,9 +173,8 @@ void UTP_WeaponComponent::HandleHitResult(UWorld* WorldParam, TArray<FHitResult>
 		//Debug
 		//DrawDebugPoint(WorldParam, Result.Location, 5.0f, FColor::Red, false, 2.0f);
 		
-		// Show gun trail (to make the trail work better while we are moving, we need to check the gun's Muzzle socket position every frame in the Tick function)
-		//For this task the trail is not needed, but I guess it would be good to show where and how to implement it in the raycasting logic
-		SetTrailForGun(Result, StartTrailParam);
+		// Show gun trail
+		SetTrailWhileHit(Result, StartTrailParam);
 
 		// Deal damage to characters
 		DealDamageToCharacter(Result);
@@ -185,7 +187,7 @@ void UTP_WeaponComponent::HandleHitResult(UWorld* WorldParam, TArray<FHitResult>
 	}
 }
 
-void UTP_WeaponComponent::SetTrailForGun(FHitResult& HitResultParam, const FVector SocketTransformParam)
+void UTP_WeaponComponent::SetTrailWhileHit(FHitResult& HitResultParam, const FVector SocketTransformParam)
 {
 
 	FVector BeamEndPoint = HitResultParam.Location;

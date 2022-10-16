@@ -34,11 +34,11 @@ protected:
 
 	/** Max health of enemy */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay", meta = (AllowPrivateAccess = "true"))
-	int MaxHealth { 100 };
+	int32 MaxHealth = 100;
 
 	/** Current health of enemy */
-	int CurrentHealth { 0 };
+	int32 CurrentHealth = 0;
 
-	bool bIsKilled { false };
+	bool bIsKilled = false;
 
 };

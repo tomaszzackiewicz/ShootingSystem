@@ -16,7 +16,7 @@ class SHOOTINGSYSTEM_API UShooterPhysicalMaterial : public UPhysicalMaterial
 	
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PhysicalMaterial", meta = (AllowPrivateAccess = "true"))
-	bool bIsPenetrable { false };
+	bool bIsPenetrable = false;
 
 public:
 	FORCEINLINE bool GetIsPenetrable() const { return bIsPenetrable; }
