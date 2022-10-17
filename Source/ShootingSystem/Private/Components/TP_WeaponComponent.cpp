@@ -30,20 +30,32 @@ void UTP_WeaponComponent::BeginPlay()
 	Super::BeginPlay();
 
 	//The things we possibly need often in the code can exist more globally not to get them all the time, especially when we shooting
-	if (ImpactTemplate)
-	{
-		ShootingImpactEffect = GetWorld()->SpawnActor<AShootingImpactEffect>(ImpactTemplate, FVector().ZeroVector, FRotator().ZeroRotator);
-	}
+	
+	SpawnShootingImpactEffect();
 
-	OwnerActor = GetOwner();
+	SetOwnerActor();
+
+	SetOwnerSkeletalMeshComponent();
 
 	SetSockets();
 	
 }
 
-void UTP_WeaponComponent::SetSockets()
+void UTP_WeaponComponent::SpawnShootingImpactEffect()
 {
+	if (ImpactTemplate)
+	{
+		ShootingImpactEffect = GetWorld()->SpawnActor<AShootingImpactEffect>(ImpactTemplate, FVector().ZeroVector, FRotator().ZeroRotator);
+	}
+}
 
+void UTP_WeaponComponent::SetOwnerActor()
+{
+	OwnerActor = GetOwner();
+}
+
+void UTP_WeaponComponent::SetOwnerSkeletalMeshComponent()
+{
 	if (!OwnerActor) {
 		return;
 	}
@@ -55,6 +67,10 @@ void UTP_WeaponComponent::SetSockets()
 	}
 
 	OwnerSkeletalMeshComponent = CurrentGun->GetSkeletalMeshComponent();
+}
+
+void UTP_WeaponComponent::SetSockets()
+{
 
 	if (!OwnerSkeletalMeshComponent)
 	{
@@ -98,11 +114,9 @@ void UTP_WeaponComponent::PlayShootFire()
 
 	if (MuzzleFireParticles && MuzzlePSC)
 	{
-
 		MuzzlePSC = UGameplayStatics::SpawnEmitterAttached(MuzzleFireParticles, OwnerSkeletalMeshComponent, FireSocket);
 
 		GetWorld()->GetTimerManager().SetTimer(StopMuzzleFirerHandle, this, &UTP_WeaponComponent::StopMuzzleFire, 0.1f, false);
-		
 	}
 }
 

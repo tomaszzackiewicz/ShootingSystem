@@ -102,6 +102,12 @@ private:
 	UPROPERTY(Transient)
 	UParticleSystemComponent* MuzzlePSC = nullptr;
 
+	void SpawnShootingImpactEffect();
+
+	void SetOwnerActor();
+
+	void SetOwnerSkeletalMeshComponent();
+
 	void SetSockets();
 
 	void PlayShootFire();
