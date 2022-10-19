@@ -346,7 +346,7 @@ void UTP_WeaponComponent::AttachWeapon(AShootingSystemCharacter* TargetCharacter
 
 		if (!OwnerActor) {
 			return;
-		};
+		}
 
 		OwnerActor->AttachToComponent(Character->GetMesh1P(), AttachmentRules, GripPoint);
 
